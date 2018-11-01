@@ -11,6 +11,7 @@ class MtgSpider(scrapy.Spider):
         for mtgset in response.css("li"):
             if mtgset.css("img::attr(src)") and mtgset.css("a::text"):
                 yield {
+                    'code': mtgset.css("img::attr(alt)")[0].extract(),
                     'name': mtgset.css("a::text")[1].extract(),
                     'icon': mtgset.css("img::attr(src)")[0].extract(),
                     'link': mtgset.css("a::attr(href)")[0].extract()
