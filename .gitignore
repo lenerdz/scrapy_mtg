@@ -1,4 +1,2 @@
-*.pyc
-mtg/__pycache__/__init__.cpython-37.pyc
-mtg/__pycache__/settings.cpython-37.pyc
-mtg/spiders/__pycache__/__init__.cpython-37.pyc
+mtg/__pycache__/
+mtg/spiders/__pycache__/
