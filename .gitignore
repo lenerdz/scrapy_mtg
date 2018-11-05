@@ -3,4 +3,3 @@ mtg/spiders/__pycache__/
 project.egg-info/
 *.json
 log.txt
-mtg/__pycache__/
