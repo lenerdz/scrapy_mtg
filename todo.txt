@@ -2,9 +2,9 @@
 - Add funcionality to get paper and online prices at the same time
 - Add funcionality to get foil prices
 - Create a spider for SCG
-- learn how to save it to MySQL
+- learn how to save it to MySQL (Use item pipelines)
 - create a menu?
 - graphs to verify the state of each set
-- load json files
+- load json files (Use item pipelines)
 - graphical interface?
 - test and configure throttle
