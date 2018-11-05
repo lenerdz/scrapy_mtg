@@ -8,3 +8,4 @@
 - load json files (Use item pipelines)
 - graphical interface?
 - test and configure throttle
+- get all the prices at the same time
