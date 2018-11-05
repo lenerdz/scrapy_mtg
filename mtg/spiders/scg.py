@@ -18,7 +18,7 @@ class ScgSpider(scrapy.Spider):
             yield scrapy.Request(tset['link'], self.parse_set)
 
     def parse_set(self, response):
-        name = '';
+        name = ''
         for cards in response.css('tr.deckdbbody_row, tr.deckdbbody2_row'):
             if cards.css("td.search_results_1>b>a::text").extract():
                 name = cards.css("td.search_results_1>b>a::text").extract_first()
