@@ -21,7 +21,7 @@ NEWSPIDER_MODULE = 'mtg.spiders'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
 
-# LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'INFO'
 # LOG_FILE = 'log.txt'
 DEPTH_PRIORITY = 1
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
