@@ -39,7 +39,10 @@ class MtgSpider(scrapy.Spider):
                 # yield cards
                 yield scrapy.Request(cards["link"], self.parse_card)
 
-        print("Finished "+cards["set"])
+        if cards["set"]:
+            print("Finished "+cards["set"])
+        else:
+            print("Failed "+response.url)
 
     # Parse a dict of all Prices of a Card
     def parse_card(self, response):
@@ -50,7 +53,9 @@ class MtgSpider(scrapy.Spider):
             card = cardname.re('\n(.*)\n')[0]
         else:
             card = "------------"
-        setname = response.css("img.price-card-name-set-symbol::attr(alt)").extract()[0]
+        setname = response.css("img.price-card-name-set-symbol::attr(alt)").extract_first()
+        if not setname:
+            setname = '???'
         n = 0
         for x in dates:
             yield {
