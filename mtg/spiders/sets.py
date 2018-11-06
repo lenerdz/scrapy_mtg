@@ -17,6 +17,6 @@ class SetsSpider(scrapy.Spider):
                     'code': mtgset.css("img::attr(alt)")[0].extract(),
                     'name': mtgset.css("a::text")[1].re('\n(.*)\n')[0],#extract(),
                     'icon': mtgset.css("img::attr(src)")[0].extract(),
-                    'link': link
+                    'url': link
                 }
                 yield sets
