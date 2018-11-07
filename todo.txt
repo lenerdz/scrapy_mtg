@@ -9,3 +9,4 @@
 - graphical interface?
 - test and configure throttle
 - get all the prices at the same time
+- remove duplicates from sets.json
