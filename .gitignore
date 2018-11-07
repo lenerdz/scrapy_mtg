@@ -1,5 +1,5 @@
 mtg/__pycache__/
 mtg/spiders/__pycache__/
 project.egg-info/
-*.json
+# *.json
 log.txt
