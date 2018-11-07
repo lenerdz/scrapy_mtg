@@ -17,7 +17,7 @@ class SetsSpider(scrapy.Spider):
             if mtgset.css("img::attr(src)") and mtgset.css("a::text"):
                 link = url + mtgset.css("a::attr(href)")[0].extract()
                 sets = {
-                    'code': mtgset.css("img::attr(alt)")[0].extract(),
+                    'setcode': mtgset.css("img::attr(alt)")[0].extract(),
                     'name': mtgset.css("a::text")[1].re('\n(.*)\n')[0],
                     'icon': mtgset.css("img::attr(src)")[0].extract(),
                     'url': link
