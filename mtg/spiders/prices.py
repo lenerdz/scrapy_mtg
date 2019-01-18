@@ -2,6 +2,8 @@
 import scrapy
 import json
 import time
+import mysql.connector
+from mysql.connector import Error
 
 # https://blog.michaelyin.info/scrapy-tutorial-11-how-to-extract-data-from-native-javascript-statement/
 
@@ -10,11 +12,36 @@ class CardSpider(scrapy.Spider):
     allowed_domains = ['mtggoldfish.com']
     # start_urls = ['https://www.mtggoldfish.com/price/Dragons+of+Tarkir/Stormrider+Rig#paper']
     start_urls=[]
-    with open('data/cardlist.json') as f:
-        cardlist = json.load(f)
-        total_cards = len(cardlist)
-    for x in cardlist:
-        start_urls.append(x['url'])
+
+    # with open('data/cardlist.json') as f:
+    #     cardlist = json.load(f)
+    #     total_cards = len(cardlist)
+    # for x in cardlist:
+    #     start_urls.append(x['url'])
+
+    try:
+        mySQLconnection = mysql.connector.connect(host='localhost', database='scrapy', user='root', password='root')
+        sql_select_Query = "select * from cards"
+        cursor = mySQLconnection.cursor()
+        cursor.execute(sql_select_Query)
+        records = cursor.fetchall()
+        print("Total number of cards - ", cursor.rowcount)
+        total_cards = cursor.rowcount
+        for row in records:
+            # print(row[2])
+            start_urls.append(row[3])
+        cursor.close()
+        
+    except Error as e :
+        print ("Error while connecting to MySQL", e)
+
+    finally:
+        #closing database connection.
+        if(mySQLconnection.is_connected()):
+            mySQLconnection.close()
+            print("MySQL connection is closed")
+
+
     error = False
     error_count = 0
     current_card = 0
@@ -105,11 +132,12 @@ class CardSpider(scrapy.Spider):
             self.errorlist.append(response.url)
             print('PARSED CARD '+str(self.current_card)+ ' of '+str(self.total_cards)+' | '+str("{0:.2f}".format(self.current_card/self.total_cards*100))+'% | '+str(self.error_count)+' errors.')
             print (response.text)
-            for count in reversed(range(1, 4)):
-                time.sleep(1)
-                print("Restarting in "+str(count)+"...")
+            # for count in reversed(range(1, 60)):
+            print("Restarting in 1 minute...")
+            time.sleep(60)
+            # print("Restarting in "+str(count)+"...")
             self.error = True
-            return False
+            # return False
         #     n+=1
 
     def spider_closed(self, spider):

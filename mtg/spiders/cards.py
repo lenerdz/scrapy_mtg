@@ -1,19 +1,42 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import json
+import mysql.connector
+from mysql.connector import Error
 
 
 class CardsSpider(scrapy.Spider):
     name = 'cards'
     allowed_domains = ['mtggoldfish.com']
     # start_urls = ['https://www.mtggoldfish.com/prices/select']
-
-    with open('data/sets.json') as f:
-        data = json.load(f)
-
     start_urls = []
-    for x in data:
-        start_urls.append(x['url'])
+
+    # with open('data/sets.json') as f:
+    #     data = json.load(f)
+
+    try:
+        mySQLconnection = mysql.connector.connect(host='localhost', database='scrapy', user='root', password='root')
+        sql_select_Query = "select * from sets"
+        cursor = mySQLconnection.cursor()
+        cursor.execute(sql_select_Query)
+        records = cursor.fetchall()
+        print("Total number of sets - ", cursor.rowcount)
+        for row in records:
+            # print(row[2])
+            start_urls.append(row[4])
+        cursor.close()
+        
+    except Error as e :
+        print ("Error while connecting to MySQL", e)
+
+    finally:
+        #closing database connection.
+        if(mySQLconnection.is_connected()):
+            mySQLconnection.close()
+            print("MySQL connection is closed")
+
+    # for x in data:
+    #     start_urls.append(x['url'])
 
     custom_settings = {
         'MYSQL_TABLE': 'cards'
