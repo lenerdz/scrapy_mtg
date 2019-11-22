@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import time
+import re
 import mysql.connector
 from mysql.connector import Error
 
@@ -21,10 +22,9 @@ class GoldfishSpider(scrapy.Spider):
                 icon = mtgset.css("img::attr(src)")[0].extract(),
                 set_url = url + mtgset.css("a::attr(href)")[0].extract()
 
-                print (setname)
+                # print (setname)
                 sets.append((setcode[0], setname[0], icon[0], set_url))
-                # card = yield scrapy.Request(set_url, self.parse_set)
-                # print(card)
+                card = yield scrapy.Request(set_url, self.parse_set)
 
         try:
             mySQLconnection = mysql.connector.connect(host='localhost', database='scrapy', user='root', password='root')
@@ -62,6 +62,8 @@ class GoldfishSpider(scrapy.Spider):
                 image = card.css("td.card > a::attr(data-full-image)")[0].extract()
 
                 cards.append((setname, name, link, image))
+                print(setname+' - '+name)
+
 
         mySQLconnection = mysql.connector.connect(host='localhost', database='scrapy', user='root', password='root')
         insert_cards = "INSERT INTO cards (setcode, name, url, image) VALUES (%s, %s, %s, %s)"
@@ -71,4 +73,18 @@ class GoldfishSpider(scrapy.Spider):
         mySQLconnection.commit()
         cursor.close()
         mySQLconnection.close()
-        print(cards)
+        # print(cards)
+        print('--------------------------------------------------------')
+
+
+    def parse_card(self, response):
+        url = 'https://www.mtggoldfish.com'
+
+        history = response.css("script").re('(var d (.*\n)*?)g = new')
+        paper = history[0]
+        online = history[2]
+
+        # (\"\\n(.*), (.*)\")
+
+        paper_prices = re.findall(ur'(\"\\n(.*), (.*)\")', paper)
+        online_prices = re.findall(ur'(\"\\n(.*), (.*)\")', online)
